@@ -1,28 +1,27 @@
-//document.addEventListener("DOMContentLoaded", () => {
 const pokemonSelect = document.getElementById("pokemon-select");
-const getPokemon = document.getElementById("get-pokemon");
-//const container = document.querySelector(".container");
+const getPokemonButton = document.getElementById("get-pokemon");
+const pokemonInfo = document.getElementById("pokemon-info");
+const pokemonName = document.getElementById("pokemon-name");
+const pokemonImage = document.getElementById("pokemon-image");
+const pokemonType = document.getElementById("pokemon-type");
+const pokemonHeight = document.getElementById("pokemon-height");
+const pokemonWeight = document.getElementById("pokemon-weight");
 
-const obtenerPokemon = (pokemon) => {
-  fetch(`https://pokeapi.co/api/v2/pokemon?limit=100`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      return response.json();
-    })
+getPokemonButton.addEventListener("click", () => {
+  const selectedPokemonId = pokemonSelect.value;
+  const apiUrl = `https://pokeapi.co/api/v2/pokemon/${selectedPokemonId}/`;
+
+  fetch(apiUrl)
+    .then((response) => response.json())
     .then((data) => {
-      console.log(data.results);
-      data.results.forEach((pokemon) => {
-        obtenerPokemon.innerHTML += `
-      <div>
-      <h2>${pokemon.tipo}</h2>
-      <p>${pokemon.peso}</p>
-      </div>
-      `;
-      });
+      pokemonName.textContent = data.name;
+      pokemonImage.src = data.sprites.front_default;
+      pokemonType.textContent = data.types[0].type.name;
+      pokemonHeight.textContent = data.height;
+      pokemonWeight.textContent = data.weight;
+      pokemonInfo.style.display = "block";
     })
-    .catch((err) => console.error("Error:", err.message));
-};
-obtenerPokemon();
-//});
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+});
